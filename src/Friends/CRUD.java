@@ -21,17 +21,24 @@ public class CRUD {
     public String addFriend(String newName, long newNumber) throws IOException {
         RandomAccessFile raf = new RandomAccessFile(file, "rw");
         String mensaje = "Contacto agregado";
+        boolean existe = false;
 
         while (raf.getFilePointer() < raf.length()) {
             String[] lineSplit = raf.readLine().split("!");
-
-            if (lineSplit.length == 2 && lineSplit[0].equals(newName) || Long.parseLong(lineSplit[1]) == newNumber) {
+            if (lineSplit[0].equals(newName) || Long.parseLong(lineSplit[1]) == newNumber) {
                 mensaje = "Ya existe este contacto";
-            }else{
-                raf.writeBytes(newName + "!" + newNumber);
-                raf.writeBytes(System.lineSeparator());
+                existe = true;
+                break;
             }
         }
+
+        if (!existe) {
+            raf.seek(raf.length());
+            raf.writeBytes(newName + "!" + newNumber);
+            raf.writeBytes(System.lineSeparator());
+        }
+
+        raf.close();
         return mensaje;
     }
 
@@ -42,7 +49,7 @@ public class CRUD {
         while (raf.getFilePointer() < raf.length()) {
             String[] lineSplit = raf.readLine().split("!");
 
-            if (lineSplit.length == 2 && lineSplit[0].equals(searchName)) {
+            if (lineSplit[0].equals(searchName)) {
                 return Long.parseLong(lineSplit[1]);
             }
         }
@@ -58,11 +65,11 @@ public class CRUD {
         while (raf.getFilePointer() < raf.length()) {
             String[] lineSplit = raf.readLine().split("!");
 
-            if (lineSplit.length == 2 && lineSplit[0].equals(newName)) {
+            if (lineSplit[0].equals(newName)) {
                 mensaje = "Contacto actualizado";
                 tmpraf.writeBytes(newName + "!" + newNumber + System.lineSeparator());
             } else {
-                tmpraf.writeBytes(raf.readLine() + System.lineSeparator());
+                tmpraf.writeBytes(lineSplit[0] + "!" + lineSplit[1] + System.lineSeparator());
             }
         }
 
@@ -89,15 +96,15 @@ public class CRUD {
         while (raf.getFilePointer() < raf.length()) {
             String[] lineSplit = raf.readLine().split("!");
 
-            if (lineSplit.length == 2 && lineSplit[0].equals(nameToDelete)) {
+            if (lineSplit[0].equals(nameToDelete)) {
                 mensaje = "Contacto eliminado";
                 continue;
             }
 
-            tmpraf.writeBytes(raf.readLine() + System.lineSeparator());
+            tmpraf.writeBytes(lineSplit[0] + "!" + lineSplit[1] + System.lineSeparator());
         }
 
-        raf.seek(0);
+        raf.setLength(0);
         tmpraf.seek(0);
 
         raf.setLength(0);

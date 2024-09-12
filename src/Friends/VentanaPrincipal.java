@@ -19,6 +19,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         setSize(280,210);
         setLocationRelativeTo(null);
         setResizable(false);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     private void inicio(){
@@ -75,29 +76,19 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent event){
         if (event.getSource() == create){
-            String nombre = campoNombre.getText();
-            Long numero = Long.parseLong(campoNumero.getText());
-            CRUD crud = new CRUD();
-            String mensaje = null;
-            try {
-                mensaje = crud.addFriend(nombre, numero);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            JOptionPane.showMessageDialog(contenedor, mensaje);
-
+            create();
         }
 
         if (event.getSource() == read){
-           // read();
+            read();
         }
 
         if (event.getSource() == update){
-            //update();
+            update();
         }
 
         if (event.getSource() == delete){
-            //delete();
+            delete();
         }
 
         if (event.getSource() == clear){
@@ -106,78 +97,98 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         }
     }
 
-    /*
     public void create(){
         boolean error = false;
-        String nombre;
-        Long numero;
-        try {
-            nombre = campoNombre.getText();
-            numero = Long.parseLong(campoNumero.getText());
-            CRUD crud = new CRUD();
-            String mensaje = crud.addFriend(nombre, numero);
-            JOptionPane.showMessageDialog(contenedor, mensaje);
-        } catch (Exception e){
-            error = true;
-        } finally {
-            if (error) {
-                JOptionPane.showMessageDialog(null,"Debes ingresar un número válido", "Error", JOptionPane.ERROR_MESSAGE);
+            String nombre;
+            Long numero;
+            try {
+                nombre = campoNombre.getText();
+                numero = Long.parseLong(campoNumero.getText());
+
+                if (nombre.isEmpty()) {
+                    throw new Exception();
+                }
+
+                CRUD crud = new CRUD();
+                String mensaje = crud.addFriend(nombre, numero);
+                JOptionPane.showMessageDialog(contenedor, mensaje);
+            } catch (Exception e){
+                error = true;
+            } finally {
+                if (error) {
+                    JOptionPane.showMessageDialog(null,"Debes ingresar un nombre o número válido", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        }
     }
 
     public void read(){
         boolean error = false;
-        String nombre;
-        try {
-            nombre = campoNombre.getText();
-            CRUD crud = new CRUD();
-            crud.readFriend(nombre);
-        } catch (Exception e){
-            error = true;
-        } finally {
-            if (error) {
-                JOptionPane.showMessageDialog(null,"Debes ingresar un número", "Error", JOptionPane.ERROR_MESSAGE);
+            String nombre;
+            try {
+                nombre = campoNombre.getText();
+                if (nombre.isEmpty()) {
+                    throw new Exception();
+                }
+
+                CRUD crud = new CRUD();
+                Long numero = crud.readFriend(nombre);
+                if (numero != null) {
+                    campoNumero.setText(String.valueOf(numero));
+                } else {
+                    JOptionPane.showMessageDialog(contenedor, "El contacto no existe");
+                }
+            } catch (Exception e){
+                error = true;
+            } finally {
+                if (error) {
+                    JOptionPane.showMessageDialog(null,"Debes ingresar un nombre", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        }
     }
 
     public void update(){
         boolean error = false;
-        String nombre;
-        Long numero;
-        try {
-            nombre = campoNombre.getText();
-            numero = Long.parseLong(campoNumero.getText());
-            CRUD crud = new CRUD();
-            crud.updateFriend(nombre, numero);
-        } catch (Exception e){
-            error = true;
-        } finally {
-            if (error) {
-                JOptionPane.showMessageDialog(null,"Debes ingresar un número", "Error", JOptionPane.ERROR_MESSAGE);
-            }else{
-                JOptionPane.showMessageDialog(null,"Debes ingresar un número", "Error", JOptionPane.ERROR_MESSAGE);
+            String nombre;
+            Long numero;
+            try {
+                nombre = campoNombre.getText();
+                numero = Long.parseLong(campoNumero.getText());
+
+                if (nombre.isEmpty()) {
+                    throw new Exception();
+                }
+
+                CRUD crud = new CRUD();
+                String mensaje = crud.updateFriend(nombre, numero);
+                JOptionPane.showMessageDialog(contenedor, mensaje);
+            } catch (Exception e){
+                error = true;
+            } finally {
+                if (error) {
+                    JOptionPane.showMessageDialog(null,"Debes ingresar un nombre o número válido", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        }
     }
 
     public void delete(){
         boolean error = false;
-        String nombre;
-        try {
-            nombre = campoNombre.getText();
-            CRUD crud = new CRUD();
-            crud.deleteFriend(nombre);
-        } catch (Exception e){
-            error = true;
-        } finally {
-            if (error) {
-                JOptionPane.showMessageDialog(null,"Debes ingresar un número", "Error", JOptionPane.ERROR_MESSAGE);
+            String nombre;
+            try {
+                nombre = campoNombre.getText();
+
+                if (nombre.isEmpty()) {
+                    throw new Exception();
+                }
+
+                CRUD crud = new CRUD();
+                String mensaje = crud.deleteFriend(nombre);
+                JOptionPane.showMessageDialog(contenedor, mensaje);
+            } catch (Exception e){
+                error = true;
+            } finally {
+                if (error) {
+                    JOptionPane.showMessageDialog(null,"Debes ingresar un nombre", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        }
     }
-
-
-*/
 }
